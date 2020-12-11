@@ -1,51 +1,14 @@
 <template>
-  <div id="nav">
-    @{{ user.username }} - {{ fullname }}
-    <strong> Followers</strong> {{ followers }}
-    <button @click="followUser"> follow </button>
-
-  </div>
+  <UserProfile/>
 </template>
 
 
 <script>
+import UserProfile from './views/UserProfile.vue'
+
 export default{
   name: 'App',
-  data(){
-    return{
-      followers:0,
-      user:{
-        username:'alexkagai',
-        firstname: 'Alex',
-        lastname: 'Kagai',
-        email: 'alex@ak-tweet.com',
-        isAdmin: true
-      }
-    }
-  }, // end of data
-  watch:{
-    followers(currentCount, previousCount){
-      if(previousCount < currentCount){
-        console.log(`${this.user.username} has gained a new follower`)
-      }
-    }
-
-  }, // end of watch
-  computed:{
-    fullname(){
-      return `${this.user.firstname} ${this.user.lastname}`
-    }
-
-  }, //end of Computed
-  methods:{
-    followUser(){
-      this.followers++;
-    }
-  }, // end of Methods
-  mounted(){
-    this.followUser();
-    console.log(`${ this.user.username} just got followed`);
-  }
+  components:{ UserProfile }
 }
 </script>
 
