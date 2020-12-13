@@ -1,6 +1,7 @@
 <template>
-  <form class="create-tweet" @submit.prevent="addNewTweet">
-    <label for="newTweet"><strong>Tweet</strong></label>
+  <form class="create-tweet" @submit.prevent="addNewTweet" 
+    :class="{ '--exceeded': tweetContentCharCount > 180 }">
+    <label for="newTweet"><strong>Tweet</strong> {{ tweetContentCharCount}}/180</label>
     <textarea id="newTweet" rows="4" v-model="tweetContent"/>
     
     <div class="create-tweet__type">
@@ -14,6 +15,7 @@
     </div>
 
     <button type="submit">tweet</button>
+
   </form>
 
 </template>
@@ -30,6 +32,11 @@ export default {
           ],
         }
     },
+    computed:{
+      tweetContentCharCount(){
+        return this.tweetContent.length
+      }
+    }, // end of computed
     methods:{
       addNewTweet(){
         if(this.tweetContent && this.tweetContentType !== "draft"){
@@ -38,8 +45,7 @@ export default {
         }
         
       }
-
-    }
+    } // end of methods
 }
 </script>
 
@@ -79,12 +85,10 @@ export default {
     color: red;
     border-color: red;
 
-    .create-twoot-panel__submit {
       button {
         background-color: red;
         color: white;
       }
-    }
   }
 }
 

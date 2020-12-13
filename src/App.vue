@@ -1,5 +1,15 @@
 <template>
-  <UserProfile/>
+  <div id="app">
+    <nav>
+      <div class="nav-logo">
+        Twotter
+      </div>
+      <div class="nav-user">
+        alex kagai
+      </div>
+    </nav>
+    <UserProfile/>
+  </div>
 </template>
 
 
@@ -21,19 +31,23 @@ export default{
   color: #2c3e50;
   display: flex;
   flex-direction: column;
-  text-align: center;
 }
 
-#nav {
-  padding: 30px;
+nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 5%;
+  background-color: darkslateblue;
+  color: white;
 
-  a {
+  .nav-logo {
     font-weight: bold;
-    color: #2c3e50;
+    font-size: 24px;
+  }
 
-    &.router-link-exact-active {
-      color: #42b983;
-    }
+  .nav-user {
+    font-weight: bold;
   }
 }
 </style>
