@@ -10,7 +10,12 @@
               <strong>Followers: </strong> {{followers }}
               <button @click="followUser"> follow </button>
             </div>
-          </div> 
+          </div> <!-- end of user Panel-->
+
+          <div class="user-profile__create-tweet-panel">
+            <CreateTweetItem @tweeted="addNewTweet"/>
+          </div>
+
         </div><!-- end of sidebar-->
         <div class="user-profile__tweets-wrapper">
           <TweetItem v-for="tweet in user.tweets" 
@@ -22,11 +27,12 @@
 </template>
 
 <script>
-import TweetItem from '../components/TweetItem'
+import TweetItem from '../components/TweetItem';
+import CreateTweetItem from '../components/CreateTweetItem';
 
 export default {
     name: 'UserProfile',
-    components:{ TweetItem },
+    components:{ TweetItem, CreateTweetItem },
     data(){
     return{
       followers:0,
@@ -66,6 +72,11 @@ export default {
     
     toggleFavourite(tweet_id){
       console.log(`Tweet #${ tweet_id} was favourited`)
+    },
+
+    addNewTweet(tweet){
+      this.user.tweets.unshift({ id: this.user.tweets.length + 1, content: tweet})
+
     }
   }, // end of Methods
   mounted(){
@@ -109,6 +120,13 @@ export default {
     display: grid;
     grid-gap: 10px;
     margin-bottom: auto;
+  }
+
+  .user-profile__create-tweet-panel{
+    border: 1px solid #DFE3E8;
+    border-radius: 5px;
+    margin-top: 10px;
+    padding: 20px 5px;
   }
 }
 </style>
