@@ -1,13 +1,13 @@
 <template>
   <form class="create-tweet" @submit.prevent="addNewTweet" 
     :class="{ '--exceeded': tweetContentCharCount > 180 }">
-    <label for="newTweet"><strong>Tweet</strong> {{ tweetContentCharCount}}/180</label>
-    <textarea id="newTweet" rows="4" v-model="tweetContent"/>
+    <label for="newTweet"><strong>Tweet</strong> {{ tweetContentCharCount }}/180</label>
+    <textarea id="newTweet" rows="4" v-model="state.tweetContent"/>
     
     <div class="create-tweet__type">
       <label for="tweet_type"><strong>Type</strong></label>
-      <select id="tweet_type" v-model="tweetContentType">
-        <option v-for="(type, index) in tweetTypes" 
+      <select id="tweet_type" v-model="state.tweetContentType">
+        <option v-for="(type, index) in state.tweetTypes" 
           :key="index" :value="type.value" >
           {{ type.name}}
         </option>
@@ -20,32 +20,40 @@
 
 </template>
 <script>
+import { reactive, computed } from 'vue';
+
 export default {
     name:"CreateTweetItem",
-    data(){
-        return{
-          tweetContent: "",
-          tweetContentType: "instant",
-          tweetTypes:[
-            {name:"Draft", value:"draft"},
-            {name:"Instant", value:"instant"}
-          ],
-        }
-    },
-    computed:{
-      tweetContentCharCount(){
-        return this.tweetContent.length
-      }
-    }, // end of computed
-    methods:{
-      addNewTweet(){
-        if(this.tweetContent && this.tweetContentType !== "draft"){
-          this.$emit('tweeted', this.tweetContent);
-          this.tweetContent = "";
+    setup(props, ctx){
+      const state = reactive({
+        tweetContent: "",
+        tweetContentType: "instant",
+        tweetTypes:[
+          {name:"Draft", value:"draft"},
+          {name:"Instant", value:"instant"}
+        ],
+      })
+
+      const tweetContentCharCount = computed(
+        () => { state.tweetContent.length; }
+      );
+
+
+      function addNewTweet(){
+        if(state.tweetContent && state.tweetContentType !== "draft"){
+          ctx.emit('tweeted', state.tweetContent);
+          state.tweetContent = "";
         }
         
       }
-    } // end of methods
+
+      return{
+        state, 
+        tweetContentCharCount,
+        addNewTweet
+      };
+    }
+
 }
 </script>
 
