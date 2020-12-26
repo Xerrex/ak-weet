@@ -1,24 +1,27 @@
 <template>
   <div id="app">
     <nav>
-      <div class="nav-logo">
-        Twotter
-      </div>
-      <div class="nav-user">
-        alex kagai
-      </div>
+      <router-link to='/'>
+        <div class="nav-logo">
+          Twotter
+        </div>
+      </router-link>
+
+      <router-link to='/'>
+        <div class="nav-user">
+          alex kagai
+        </div>
+      </router-link>
     </nav>
-    <UserProfile/>
+    <router-view/>
   </div>
 </template>
 
 
 <script>
-import UserProfile from './views/UserProfile.vue'
 
 export default{
   name: 'App',
-  components:{ UserProfile }
 }
 </script>
 

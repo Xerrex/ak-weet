@@ -2,12 +2,15 @@
     <div class="user-profile">
         <div class="user-profile__sidebar">
           <div class="user-profile__user-panel">
-            <h1 class="user-profile__username">@{{ user.username }}</h1>
-            <div class="user-profile__admin-badge" v-if="user.isAdmin">
+            <div class="user-profile__username">
+              <h2>{{ fullname }}</h2>
+              <span>@{{ state.user.username }}</span>
+            </div>
+            <div class="user-profile__admin-badge" v-if="state.user.isAdmin">
               Admin
             </div>
             <div class="user-profile__follower-count">
-              <strong>Followers: </strong> {{followers }}
+              <strong>Followers: </strong> {{ state.followers }}
               <button @click="followUser"> follow </button>
             </div>
           </div> <!-- end of user Panel-->
@@ -18,8 +21,8 @@
 
         </div><!-- end of sidebar-->
         <div class="user-profile__tweets-wrapper">
-          <TweetItem v-for="tweet in user.tweets" 
-            :key="tweet.id" :username="user.username" 
+          <TweetItem v-for="tweet in state.user.tweets" 
+            :key="tweet.id" :username="state.user.username" 
             :tweet="tweet" @favourite="toggleFavourite"/>
           
         </div>
@@ -29,60 +32,54 @@
 <script>
 import TweetItem from '../components/TweetItem';
 import CreateTweetItem from '../components/CreateTweetItem';
+import { reactive, computed, onMounted } from 'vue';
+import { useRoute } from 'vue-router';
+import { users } from '@/assets/users';
 
 export default {
     name: 'UserProfile',
     components:{ TweetItem, CreateTweetItem },
-    data(){
-    return{
-      followers:0,
-      user:{
-        username:'alexkagai',
-        firstname: 'Alex',
-        lastname: 'Kagai',
-        email: 'alex@ak-tweet.com',
-        isAdmin: true,
-        tweets: [
-          { id: 1, content:"welcome to Ak-tweet."},
-          { id: 2, content:"theearthisSquare Vue3 Tut is awesome."},
-          { id: 3, content:"Vue3 preview is awesome."},
-          { id: 4, content:"Hapo tu Hapo tu"}
-        ]
-      }
-    }
-  }, // end of data
-  watch:{
-    followers(currentCount, previousCount){
-      if(previousCount < currentCount){
-        console.log(`${this.user.username} has gained a new follower`)
-      }
-    }
+    setup(){
 
-  }, // end of watch
-  computed:{
-    fullname(){
-      return `${this.user.firstname} ${this.user.lastname}`
-    }
+      const route = useRoute();
+      const userid = computed(()=>route.params.userid);
 
-  }, //end of Computed
-  methods:{
-    followUser(){
-      this.followers++;
-    },
+      const state = reactive({
+        followers:0,
+        user: users[userid.value -1] || users[0]
+      })
+
+      // Computed Section
+      const fullname = computed(()=>{
+        return `${state.user.firstname} ${state.user.lastname}`
+      })
+
+      // TODO Watch Section
+
+
+      // Methods Section
+      function followUser(){
+        state.followers++;
+      }
     
-    toggleFavourite(tweet_id){
-      console.log(`Tweet #${ tweet_id} was favourited`)
-    },
+      function toggleFavourite(tweet_id){
+        console.log(`Tweet #${ tweet_id} was favourited`)
+      }
 
-    addNewTweet(tweet){
-      this.user.tweets.unshift({ id: this.user.tweets.length + 1, content: tweet})
+      function addNewTweet(tweet){
+        state.user.tweets.unshift({ id: state.user.tweets.length + 1, content: tweet})
+      }
 
-    }
-  }, // end of Methods
-  mounted(){
-    this.followUser();
-    console.log(`${ this.user.username} just got followed`);
-  }
+      // On mountrd Section.
+      onMounted(()=>{
+        followUser();
+      })
+
+      return{
+        state, fullname,
+        followUser, toggleFavourite, addNewTweet
+      }
+    } // end of setup
 }
 </script>
 
@@ -104,6 +101,20 @@ export default {
 
     h1 {
       margin: 0;
+    }
+
+    .user-profile__username{
+      margin:10px;
+
+      h2 {
+        margin-bottom: 0;
+      }
+    span{
+      font-size: 15px;
+      margin-bottom:5px;
+      font-style: italic;
+    }
+
     }
 
     .user-profile__admin-badge {
