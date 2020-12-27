@@ -7,11 +7,9 @@
         </div>
       </router-link>
 
-      <router-link to='/'>
-        <div class="nav-user">
-          alex kagai
-        </div>
-      </router-link>
+      <div class="nav-user" v-if="user">
+        {{ user.username }}
+      </div>
     </nav>
     <router-view/>
   </div>
@@ -19,9 +17,21 @@
 
 
 <script>
+import {useStore } from 'vuex';
+import { computed } from 'vue';
 
 export default{
+
   name: 'App',
+  setup(){
+    const store = useStore();
+    const user = computed(() => store.state.User.user);
+    console.log(user)
+
+    return {
+      user
+    }
+  }
 }
 </script>
 
